@@ -67,16 +67,19 @@ export function canMakeup(date: string): boolean {
 }
 
 // ---- 提醒设置 ----
+const DEFAULT_REMINDER: ReminderSettings = {
+  checkinEnabled: false, checkinTime: '08:00',
+  exerciseEnabled: false, exerciseTime: '18:00',
+  waterEnabled: false, waterTimes: ['08:00', '11:00', '14:00', '17:00'],
+}
+
 export function getReminderSettings(): ReminderSettings {
-  if (!isBrowser()) return {
-    checkinEnabled: false, checkinTime: '08:00',
-    exerciseEnabled: false, exerciseTime: '18:00',
-  }
+  if (!isBrowser()) return DEFAULT_REMINDER
   const raw = localStorage.getItem(KEYS.reminder)
-  return raw ? JSON.parse(raw) : {
-    checkinEnabled: false, checkinTime: '08:00',
-    exerciseEnabled: false, exerciseTime: '18:00',
-  }
+  if (!raw) return DEFAULT_REMINDER
+  // 兼容旧数据：补全水提醒字段
+  const parsed = JSON.parse(raw)
+  return { ...DEFAULT_REMINDER, ...parsed }
 }
 
 export function saveReminderSettings(s: ReminderSettings) {

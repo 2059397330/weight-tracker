@@ -25,6 +25,8 @@ export interface ReminderSettings {
   checkinTime: string     // HH:mm
   exerciseEnabled: boolean
   exerciseTime: string    // HH:mm
+  waterEnabled: boolean
+  waterTimes: string[]    // HH:mm x4，固定4次
 }
 
 export type DietLabel = 'low' | 'normal' | 'over'

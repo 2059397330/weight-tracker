@@ -31,6 +31,7 @@ export default function SettingsPage() {
   const [reminder, setReminder] = useState<ReminderSettings>({
     checkinEnabled: false, checkinTime: '08:00',
     exerciseEnabled: false, exerciseTime: '18:00',
+    waterEnabled: false, waterTimes: ['08:00', '11:00', '14:00', '17:00'],
   })
   const [goal, setGoal] = useState<UserGoal | null>(null)
   const [editGoal, setEditGoal] = useState(false)
@@ -183,6 +184,34 @@ export default function SettingsPage() {
                   onChange={e => setReminder(r => ({ ...r, exerciseTime: e.target.value }))}
                   className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-300"
                 />
+              </div>
+            )}
+          </div>
+          <div>
+            <Toggle
+              enabled={reminder.waterEnabled}
+              onChange={v => setReminder(r => ({ ...r, waterEnabled: v }))}
+              label="喝水提醒"
+              desc="每天4次提醒你喝水"
+            />
+            {reminder.waterEnabled && (
+              <div className="pb-3 space-y-2">
+                <label className="text-xs text-gray-400 block">4次提醒时间</label>
+                {reminder.waterTimes.map((t, i) => (
+                  <div key={i} className="flex items-center gap-2">
+                    <span className="text-xs text-gray-400 w-10">第{['一','二','三','四'][i]}次</span>
+                    <input
+                      type="time"
+                      value={t}
+                      onChange={e => {
+                        const times = [...reminder.waterTimes]
+                        times[i] = e.target.value
+                        setReminder(r => ({ ...r, waterTimes: times }))
+                      }}
+                      className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-green-300"
+                    />
+                  </div>
+                ))}
               </div>
             )}
           </div>
