@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   output: 'export',
   trailingSlash: true,
   images: { unoptimized: true },
+  basePath: '/weight-tracker',
+  assetPrefix: '/weight-tracker',
 };
 
 export default nextConfig;
