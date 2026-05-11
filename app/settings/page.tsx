@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { getReminderSettings, saveReminderSettings, getGoal, saveGoal, exportData } from '@/lib/storage'
 import { ReminderSettings, UserGoal } from '@/lib/types'
+import { scheduleNotifications } from '@/lib/scheduler'
 import { useRouter } from 'next/navigation'
 
 function Toggle({ enabled, onChange, label, desc }: {
@@ -61,10 +62,8 @@ export default function SettingsPage() {
 
   function handleSaveReminder() {
     saveReminderSettings(reminder)
-    // 通知 SW 更新提醒时间
-    if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-      navigator.serviceWorker.controller.postMessage({ type: 'UPDATE_REMINDERS', payload: reminder })
-    }
+    // 保存后立即重新调度今天的通知
+    scheduleNotifications(reminder)
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }

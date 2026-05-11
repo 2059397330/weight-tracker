@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import BottomNav from '@/components/BottomNav'
+import NotificationInit from '@/components/NotificationInit'
 
 export const metadata: Metadata = {
   title: '减肥打卡',
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="apple-touch-icon" href="/weight-tracker/icon-192.png" />
       </head>
       <body className="bg-gray-50 min-h-screen">
+        <NotificationInit />
         <div className="max-w-md mx-auto min-h-screen flex flex-col bg-white shadow-sm">
           <main className="flex-1 overflow-y-auto pb-20">
             {children}
