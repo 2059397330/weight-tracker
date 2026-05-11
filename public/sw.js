@@ -2,13 +2,20 @@
 self.addEventListener('install', () => self.skipWaiting())
 self.addEventListener('activate', e => e.waitUntil(self.clients.claim()))
 
-// 接收来自页面的消息：页面负责计算时间，SW 负责到点弹通知
+// 保存所有 timer ID，用于取消
+const timerIds = []
+
+// 接收来自页面的消息
 self.addEventListener('message', e => {
   if (e.data?.type === 'SCHEDULE_NOTIFICATIONS') {
-    const notifications = e.data.payload // [{delayMs, title, body, tag}]
+    // 先取消所有旧的 timer
+    for (const id of timerIds) clearTimeout(id)
+    timerIds.length = 0
+
+    const notifications = e.data.payload // [{delayMs, title, body, tag, url}]
     for (const n of notifications) {
       if (n.delayMs < 0) continue
-      setTimeout(() => {
+      const id = setTimeout(() => {
         self.registration.showNotification(n.title, {
           body: n.body,
           icon: '/weight-tracker/icon-192.png',
@@ -18,6 +25,7 @@ self.addEventListener('message', e => {
           data: { url: n.url ?? '/weight-tracker/' },
         })
       }, n.delayMs)
+      timerIds.push(id)
     }
   }
 })
